@@ -10,41 +10,41 @@ const createNote = asyncHandler(async (req: Request, res: Response) => {
     const note = await Note.create({
         title,
         body,
-        user: req.body.user._id
+        user: req.body.user
     })
 
     res.json({note})
 })
 
 const deleteNote = asyncHandler(async (req: Request, res: Response) => {
-    const  _id  = req.params._id;
+    const _id = req.params._id;
 
-    await Note.deleteOne({ _id});
+    await Note.deleteOne({_id});
 
     res.json({message: 'Note removed'})
 })
 
 const updateNote = asyncHandler(async (req: Request, res: Response) => {
 
-    const { title, body,_id } = req.body;
+    const {title, body, _id} = req.body;
     const note = await Note.findOneAndUpdate(
-        { _id, user: req.user._id },
-        { title, body },
-        { new: true }
+        {_id, user: req.body.user},
+        {title, body},
+        {new: true}
     );
 
 
-    res.json({ note });
+    res.json({note});
 });
 
 
 const getAllNotes = asyncHandler(async (req: Request, res: Response) => {
     try {
         const userId = req.params.userId; // Assuming the user ID is part of the URL parameter
-        const notes = await Note.find({ user: userId });
-        res.json({ notes });
+        const notes = await Note.find({user: userId});
+        res.json({notes});
     } catch (error) {
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({error: 'Internal server error'});
     }
 });
 

@@ -9,8 +9,8 @@ const protect = asyncHandler(async (req, res, next) => {
 
     if (token) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+            const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+// @ts-ignore
             req.user = await User.findById(decoded.userId).select('-password');
 
             next();
@@ -25,4 +25,4 @@ const protect = asyncHandler(async (req, res, next) => {
     }
 });
 
-export { protect };
+export {protect};
