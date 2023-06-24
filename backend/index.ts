@@ -15,7 +15,9 @@ connectDB()
 const corsOptions = {
     origin: process.env.FRONTEND_URL,
     credentials: true,
+    optionsSuccessStatus: 200
 }
+
 
 const app = express();
 app.use(cors(corsOptions))
@@ -34,5 +36,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(port, () => {
-    console.log(`Server started at http://localhost:${port}`);
+    console.log(`Server started at ${port}`);
 })
