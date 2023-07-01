@@ -1,6 +1,9 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import generateToken from "../utils/generateToken.js";
+
+
+
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
 // @access  Public
@@ -8,7 +11,7 @@ const authUser = asyncHandler(async (req, res) => {
     const {email, password} = req.body;
 
     const user = await User.findOne({email});
-// @ts-ignore
+
     if (user && (await user.matchPassword(password))) {
         generateToken(res, user._id);
 
