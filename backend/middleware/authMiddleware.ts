@@ -1,19 +1,29 @@
 import jwt from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
-import User from '../models/userModel.js';
+import User, {IUser} from '../models/userModel.js';
 
-const protect = asyncHandler(async (req, res, next) => {
+interface AuthenticatedRequest extends Request {
+    user?: IUser;
+}
+
+const protect = asyncHandler(async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     let token;
 
     token = req.cookies.jwt;
 
     if (token) {
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-// @ts-ignore
-            req.user = await User.findById(decoded.userId).select('-password');
+            const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+            const user = await User.findById(decoded.userId).select('-password');
 
-            next();
+            if (user) {
+                req.user = user;
+                next();
+            } else {
+                res.status(401);
+                throw new Error('Not authorized, user not found');
+            }
         } catch (error) {
             console.error(error);
             res.status(401);
@@ -25,4 +35,5 @@ const protect = asyncHandler(async (req, res, next) => {
     }
 });
 
-export {protect};
+
+export { protect };

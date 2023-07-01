@@ -1,9 +1,10 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, {Document} from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-interface IUser extends Document {
+export interface IUser extends Document {
     email: string;
     password: string;
+
     matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -25,9 +26,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Match user entered password to hashed password in database
-userSchema.methods.matchPassword = async function (
-    enteredPassword: string
-): Promise<boolean> {
+userSchema.methods.matchPassword = async function (enteredPassword: string): Promise<boolean> {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
