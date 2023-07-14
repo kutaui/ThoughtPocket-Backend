@@ -13,7 +13,7 @@ const generateToken = (res: Response, userId: Types.ObjectId) => {
         httpOnly: true,
         secure: process.env.NODE_ENV !== 'development',
         // this should be strict to prevent CSRF attacks but I can't do that because the frontend is on a different domain
-        sameSite: 'strict',
+        sameSite: 'none',
         maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
 
     });
