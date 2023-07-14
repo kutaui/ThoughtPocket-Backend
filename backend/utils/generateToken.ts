@@ -10,7 +10,7 @@ const generateToken = (res: Response, userId: Types.ObjectId) => {
     })
 // send a token as a cookie
     res.cookie("jwt", token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: false,
         // this should be strict to prevent CSRF attacks but I can't do that because the frontend is on a different domain
         sameSite: "none",
