@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
-import generateToken from "../utils/generateToken.js";
-
+import generateToken from '../utils/generateToken.js';
+import { Request, Response } from 'express';
 
 
 // @desc    Auth user & get token
@@ -59,7 +59,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc    Logout user / clear cookie
 // @route   POST /api/users/logout
 // @access  Public
-const logoutUser = (req:any, res:any) => {
+const logoutUser = (req: Request, res: Response) => {
     res.cookie('jwt', '', {
         httpOnly: true,
         expires: new Date(0),
@@ -71,5 +71,4 @@ export {
     authUser,
     registerUser,
     logoutUser,
-
 };
