@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
-import generateToken from "../utils/generateToken.js";
-
+import generateToken from '../utils/generateToken.js';
+import jwt from 'jsonwebtoken';
 
 
 // @desc    Auth user & get token
@@ -59,7 +59,7 @@ const registerUser = asyncHandler(async (req, res) => {
 // @desc    Logout user / clear cookie
 // @route   POST /api/users/logout
 // @access  Public
-const logoutUser = (req:any, res:any) => {
+const logoutUser = (req: any, res: any) => {
     res.cookie('jwt', '', {
         httpOnly: true,
         expires: new Date(0),
@@ -67,9 +67,26 @@ const logoutUser = (req:any, res:any) => {
     res.status(200).json({message: 'Logged out successfully'});
 };
 
+const verifyToken = asyncHandler(async (req: any, res: any) => {
+    let token;
+
+    token = req.cookies.jwt;
+    if (!token) {
+        return res.status(401).json({message: 'No token provided'});
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    if (!decoded) {
+        res.status(401).json({isValid: false});
+    }
+
+    console.log('decoded', decoded);
+    res.status(200).json({isValid: true});
+});
+
 export {
     authUser,
     registerUser,
     logoutUser,
-
+    verifyToken
 };
